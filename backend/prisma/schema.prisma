@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Type {
+  INCOME
+  EXPENSE
+}
+
+model User {
+  id            String        @id @default(uuid())
+  first_name    String
+  last_name     String
+  email         String        @unique
+  password      String
+  currency      String?
+  refresh_token String?       @unique
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  Transaction   Transaction[]
+  Bank          Bank[]
+  Budget        Budget[]
+  Cateogry      Cateogry[]
+}
+
+model Bank {
+  id           String        @id @default(uuid())
+  bank_name    String
+  account_name String
+  user_id      String
+  user         User          @relation(fields: [user_id], references: [id])
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  Transaction  Transaction[]
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  description   String
+  amount        Decimal  @db.Decimal(10, 2)
+  type          Type
+  date          DateTime
+  category      String
+  category_icon String
+  bank_id       String
+  bank          Bank     @relation(fields: [bank_id], references: [id])
+  user_id       String
+  user          User     @relation(fields: [user_id], references: [id])
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Budget {
+  id            String   @id @default(uuid())
+  limit         Decimal  @db.Decimal(10, 2)
+  category      String
+  category_icon String
+  user_id       String
+  user          User     @relation(fields: [user_id], references: [id])
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Cateogry {
+  id         String   @id @default(uuid())
+  name       String
+  icon       String
+  type       Type
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
