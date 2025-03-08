@@ -24,6 +24,7 @@ async function save(
       last_name: lastName,
       email: email,
       password: password,
+      currency: "$",
     },
   });
 }
