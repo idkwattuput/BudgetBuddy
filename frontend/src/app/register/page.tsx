@@ -71,7 +71,7 @@ export default function Register() {
       const accessToken = response?.data?.accessToken
       setAccessToken(accessToken)
       toast.success("Sign Up success 🎉")
-      router.push("/dashboard")
+      router.push("/setup")
     } catch (error) {
       // @ts-expect-error "idk"
       if (!error?.response) {

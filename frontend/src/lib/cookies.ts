@@ -1,5 +1,13 @@
 "use server";
 import { cookies } from "next/headers";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+
+interface UserJWT extends JwtPayload {
+  id: string;
+  first_name: string;
+  last_name: string;
+  currency: string;
+}
 
 export async function getAccessToken() {
   const cookieStore = await cookies();
@@ -29,4 +37,12 @@ export async function isUserAuthenticated() {
     return false;
   }
   return true;
+}
+
+export async function getUserJWT(): Promise<UserJWT> {
+  const refreshToken = await getRefreshToken();
+  if (!refreshToken) {
+    throw new Error("Something happen with refresh token");
+  }
+  return jwtDecode(refreshToken);
 }
