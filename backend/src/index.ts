@@ -8,6 +8,7 @@ import { credentials } from "./middlewares/credentials";
 import { corsOptions } from "./config/cors-options";
 import { errorHandler } from "./middlewares/error";
 import userRouter from "./routes/user-route";
+import bankRouter from "./routes/bank-route";
 
 export const app = express();
 const PORT = Bun.env.PORT! || 8000;
@@ -25,6 +26,7 @@ app.use("/api/v1/auth", authRouter);
 app.use(verifyJWT);
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/banks", bankRouter);
 
 // Handling non-existent routes
 app.use((_, res) => {
