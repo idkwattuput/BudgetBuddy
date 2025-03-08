@@ -35,12 +35,20 @@ async function register(req: Request, res: Response, next: NextFunction) {
     );
 
     const accessToken = jwt.sign(
-      { id: newUser.id },
+      {
+        id: newUser.id,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+      },
       Bun.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: Bun.env.ACCESS_TOKEN_EXPIRES! },
     );
     const refreshToken = jwt.sign(
-      { id: newUser.id },
+      {
+        id: newUser.id,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+      },
       Bun.env.REFRESH_TOKEN_SECRET!,
       { expiresIn: Bun.env.REFRESH_TOKEN_EXPIRES! },
     );
@@ -91,12 +99,20 @@ async function login(req: Request, res: Response, next: NextFunction) {
     }
 
     const accessToken = jwt.sign(
-      { id: isEmailExist.id },
+      {
+        id: isEmailExist.id,
+        first_name: isEmailExist.first_name,
+        last_name: isEmailExist.last_name,
+      },
       Bun.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: Bun.env.ACCESS_TOKEN_EXPIRES! },
     );
     const refreshToken = jwt.sign(
-      { id: isEmailExist.id },
+      {
+        id: isEmailExist.id,
+        first_name: isEmailExist.first_name,
+        last_name: isEmailExist.last_name,
+      },
       Bun.env.REFRESH_TOKEN_SECRET!,
       { expiresIn: Bun.env.REFRESH_TOKEN_EXPIRES! },
     );
@@ -138,7 +154,11 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
       }
 
       const accessToken = jwt.sign(
-        { id: (decode as { id: number }).id },
+        {
+          id: (decode as { id: number }).id,
+          first_name: (decode as { first_name: string }).first_name,
+          last_name: (decode as { last_name: string }).last_name,
+        },
         Bun.env.ACCESS_TOKEN_SECRET!,
         { expiresIn: Bun.env.ACCESS_TOKEN_EXPIRES! },
       );
