@@ -1,5 +1,11 @@
 import { prisma } from "../database/db";
 
+async function find(id: string) {
+  return await prisma.user.findUnique({
+    where: { id: id },
+  });
+}
+
 async function findByEmail(email: string) {
   return await prisma.user.findUnique({
     where: { email: email },
@@ -25,6 +31,31 @@ async function save(
       email: email,
       password: password,
       currency: "$",
+    },
+  });
+}
+
+async function updateInfo(
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+) {
+  return prisma.user.update({
+    where: { id: id },
+    data: {
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+    },
+  });
+}
+
+async function updatePassword(id: string, password: string) {
+  return prisma.user.update({
+    where: { id: id },
+    data: {
+      password: password,
     },
   });
 }
@@ -55,9 +86,12 @@ async function updateCurrency(id: string, currency: string) {
 }
 
 export default {
+  find,
   findByEmail,
   findByRefreshToken,
   save,
+  updateInfo,
+  updatePassword,
   updateRefreshToken,
   updateCurrency,
 };
