@@ -25,7 +25,7 @@ model User {
   Transaction   Transaction[]
   Bank          Bank[]
   Budget        Budget[]
-  Cateogry      Cateogry[]
+  Category      Category[]
 }
 
 model Bank {
@@ -34,45 +34,55 @@ model Bank {
   account_name String
   user_id      String
   user         User          @relation(fields: [user_id], references: [id])
+  is_archive   Boolean       @default(false)
   created_at   DateTime      @default(now())
   updated_at   DateTime      @updatedAt
   Transaction  Transaction[]
+
+  @@unique([bank_name, account_name, user_id])
 }
 
 model Transaction {
-  id            String   @id @default(uuid())
-  description   String
-  amount        Decimal  @db.Decimal(10, 2)
-  type          Type
-  date          DateTime
-  category      String
-  category_icon String
-  bank_id       String
-  bank          Bank     @relation(fields: [bank_id], references: [id])
-  user_id       String
-  user          User     @relation(fields: [user_id], references: [id])
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  description String
+  amount      Decimal  @db.Decimal(10, 2)
+  type        Type
+  date        DateTime
+  category_id String
+  category    Category @relation(fields: [category_id], references: [id])
+  bank_id     String?
+  bank        Bank?    @relation(fields: [bank_id], references: [id])
+  user_id     String
+  user        User     @relation(fields: [user_id], references: [id])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
 model Budget {
-  id            String   @id @default(uuid())
-  limit         Decimal  @db.Decimal(10, 2)
-  category      String
-  category_icon String
-  user_id       String
-  user          User     @relation(fields: [user_id], references: [id])
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  limit       Decimal  @db.Decimal(10, 2)
+  category_id String
+  category    Category @relation(fields: [category_id], references: [id])
+  user_id     String
+  user        User     @relation(fields: [user_id], references: [id])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@unique([category_id, user_id])
 }
 
-model Cateogry {
-  id         String   @id @default(uuid())
-  name       String
-  icon       String
-  type       Type
-  user_id    String
-  user       User     @relation(fields: [user_id], references: [id])
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model Category {
+  id          String        @id @default(uuid())
+  name        String
+  icon        String
+  type        Type
+  user_id     String
+  user        User          @relation(fields: [user_id], references: [id])
+  created_at  DateTime      @default(now())
+  is_archive  Boolean       @default(false)
+  updated_at  DateTime      @updatedAt
+  Transaction Transaction[]
+  Budget      Budget[]
+
+  @@unique([name, user_id, type])
 }
