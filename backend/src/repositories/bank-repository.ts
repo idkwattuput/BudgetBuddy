@@ -2,7 +2,8 @@ import { prisma } from "../database/db";
 
 async function findAll(userId: string) {
   return await prisma.bank.findMany({
-    where: { user_id: userId },
+    where: { user_id: userId, is_archive: false },
+    orderBy: { created_at: "desc" },
   });
 }
 
@@ -22,9 +23,12 @@ async function save(userId: string, bankName: string, accountName: string) {
   });
 }
 
-async function remove(id: string) {
-  return await prisma.bank.delete({
+async function archive(id: string) {
+  return await prisma.bank.update({
     where: { id: id },
+    data: {
+      is_archive: true,
+    },
   });
 }
 
@@ -32,5 +36,5 @@ export default {
   findAll,
   find,
   save,
-  remove,
+  archive,
 };

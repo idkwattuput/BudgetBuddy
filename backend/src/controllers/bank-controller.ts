@@ -25,14 +25,14 @@ async function createBank(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function deleteBank(req: Request, res: Response, next: NextFunction) {
+async function archiveBank(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const isBankExist = await bankRepository.find(id);
     if (!isBankExist) {
       return res.status(404).json({ message: "Bank doesn't exist" });
     }
-    await bankRepository.remove(id);
+    await bankRepository.archive(id);
     return res.sendStatus(204);
   } catch (error) {
     next(error);
@@ -42,5 +42,5 @@ async function deleteBank(req: Request, res: Response, next: NextFunction) {
 export default {
   getBanks,
   createBank,
-  deleteBank,
+  archiveBank,
 };
