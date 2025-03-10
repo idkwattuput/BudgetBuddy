@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Banknote, Building, HandCoins, House } from "lucide-react"
+import { Banknote, Box, Building, HandCoins, House } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
@@ -12,6 +12,7 @@ export default function Sidebar() {
     { label: "Transaction", href: "/transaction", icon: (<HandCoins />) },
     { label: "Budget", href: "/budget", icon: (<Banknote />) },
     { label: "Bank", href: "/bank", icon: (<Building />) },
+    { label: "Category", href: "/category", icon: (<Box />) },
   ]
 
   return (
