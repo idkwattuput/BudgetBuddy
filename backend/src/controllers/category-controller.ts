@@ -3,8 +3,14 @@ import categoryRepository from "../repositories/category-repository";
 
 async function getCategories(req: Request, res: Response, next: NextFunction) {
   try {
+    let categories;
     const userId = (req as any).user.id;
-    const categories = await categoryRepository.findAll(userId);
+    const type = req.query.type as "INCOME" | "EXPENSE" | undefined;
+    if (!type) {
+      categories = await categoryRepository.findAll(userId);
+    } else {
+      categories = await categoryRepository.findByType(userId, type);
+    }
     return res.json({ data: categories });
   } catch (error) {
     next(error);

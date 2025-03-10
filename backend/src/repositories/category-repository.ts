@@ -15,6 +15,13 @@ async function findAll(userId: string) {
   });
 }
 
+async function findByType(userId: string, type: Type) {
+  return await prisma.category.findMany({
+    where: { user_id: userId, is_archive: false, type: type },
+    orderBy: { created_at: "desc" },
+  });
+}
+
 async function find(id: string) {
   return await prisma.category.findUnique({
     where: { id: id },
@@ -38,6 +45,7 @@ async function archive(id: string) {
 
 export default {
   findAll,
+  findByType,
   find,
   save,
   archive,

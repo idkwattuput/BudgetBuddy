@@ -32,7 +32,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/banks", bankRouter);
 app.use("/api/v1/transactions", transactionRouter);
 app.use("/api/v1/budgets", budgetRouter);
-app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/category", categoryRouter);
 
 // Handling non-existent routes
 app.use((_, res) => {

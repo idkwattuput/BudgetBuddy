@@ -11,9 +11,16 @@ interface TransactionPayload {
   user_id: string;
 }
 
-async function findAll(userId: string) {
+async function findAll(userId: string, page: number, limit: number) {
   return await prisma.transaction.findMany({
     where: { user_id: userId },
+    include: {
+      user: { select: { currency: true } },
+      category: { select: { name: true, icon: true } },
+    },
+    skip: (page - 1) * limit,
+    take: limit,
+    orderBy: { date: "desc" },
   });
 }
 

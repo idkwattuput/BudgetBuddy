@@ -12,7 +12,7 @@ export default function AuthenticateLayout({
       <Navbar />
       <div className="flex h-full">
         <Sidebar />
-        <div className="flex-1">
+        <div className="flex-1 p-4">
           {children}
         </div>
       </div>
