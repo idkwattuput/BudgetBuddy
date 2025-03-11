@@ -13,6 +13,7 @@ export type Transaction = {
   type: "INCOME" | "EXPENSE"
   date: Date
   category: { name: string, icon: string },
+  bank: { bank_name: string }
   user_id: string
   user: { currency: string }
   created_date: Date
@@ -60,6 +61,19 @@ export const columns: ColumnDef<Transaction>[] = [
       <div className="flex gap-2 capitalize items-center justify-center">
         {row.original.category.icon}
         <div className="capitalize">{row.original.category.name}</div>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "bank",
+    header: ({ column }) => {
+      return (
+        <div className="text-center">Bank</div>
+      )
+    },
+    cell: ({ row }) => (
+      <div className="flex gap-2 capitalize items-center justify-center">
+        <div className="capitalize">{row.original?.bank?.bank_name || "None"}</div>
       </div>
     ),
   },

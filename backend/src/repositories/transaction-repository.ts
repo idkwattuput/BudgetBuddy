@@ -17,6 +17,7 @@ async function findAll(userId: string, page: number, limit: number) {
     include: {
       user: { select: { currency: true } },
       category: { select: { name: true, icon: true } },
+      bank: { select: { bank_name: true } },
     },
     skip: (page - 1) * limit,
     take: limit,
