@@ -16,6 +16,7 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import useAxiosPrivate from "@/hooks/use-axios-private";
 import { toast } from "sonner";
+import BankComboBox from "./bank-combo-box";
 
 interface Props {
   children: ReactNode,
@@ -23,8 +24,9 @@ interface Props {
 }
 
 const FormSchema = z.object({
-  description: z.string().optional(),
+  description: z.string().min(3),
   amount: z.coerce.number().positive().multipleOf(0.01),
+  bankId: z.string().optional(),
   categoryId: z.string(),
   date: z.coerce.date(),
   type: z.union([
@@ -47,8 +49,11 @@ export default function AddTransactionDialog({ children, type }: Props) {
   });
 
   const handleCategoryChange = useCallback((categoryId: string) => {
-    console.log("from transactino", categoryId)
     form.setValue("categoryId", categoryId)
+  }, [form])
+
+  const handleBankChange = useCallback((bankId: string) => {
+    form.setValue("bankId", bankId)
   }, [form])
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -60,6 +65,7 @@ export default function AddTransactionDialog({ children, type }: Props) {
           amount: data.amount,
           type: data.type,
           categoryId: data.categoryId,
+          bankId: data.bankId || null,
           date: data.date
         }),
         {
@@ -118,19 +124,34 @@ export default function AddTransactionDialog({ children, type }: Props) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex items-center justify-between gap-2">
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bankId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bank</FormLabel>
+                    <FormControl>
+                      <BankComboBox onChange={handleBankChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className="flex items-center justify-between gap-2">
               <FormField

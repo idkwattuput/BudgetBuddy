@@ -20,7 +20,7 @@ export async function setAccessToken(accessToken: string) {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 10,
+    maxAge: 50,
   });
 }
 
