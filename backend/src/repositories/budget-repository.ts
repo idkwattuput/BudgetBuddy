@@ -3,6 +3,11 @@ import { prisma } from "../database/db";
 async function findAll(userId: string) {
   return await prisma.budget.findMany({
     where: { user_id: userId },
+    orderBy: { created_at: "asc" },
+    include: {
+      user: { select: { currency: true } },
+      category: { select: { name: true, icon: true } },
+    },
   });
 }
 
@@ -12,12 +17,22 @@ async function find(id: string) {
   });
 }
 
-async function save(userId: string, limit: number, categoryId: string) {
+async function save(
+  userId: string,
+  limit: number,
+  spend: number,
+  categoryId: string,
+) {
   return await prisma.budget.create({
     data: {
       limit: limit,
+      spend: spend,
       category_id: categoryId,
       user_id: userId,
+    },
+    include: {
+      user: { select: { currency: true } },
+      category: { select: { name: true, icon: true } },
     },
   });
 }

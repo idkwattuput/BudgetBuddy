@@ -1,4 +1,5 @@
 import express from "express";
+import { CronJob } from "cron";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { logger } from "./middlewares/log";
@@ -12,6 +13,7 @@ import bankRouter from "./routes/bank-route";
 import transactionRouter from "./routes/transaction-route";
 import budgetRouter from "./routes/budget-route";
 import categoryRouter from "./routes/category-route";
+import { prisma } from "./database/db";
 
 export const app = express();
 const PORT = Bun.env.PORT! || 8000;
@@ -38,6 +40,13 @@ app.use("/api/v1/category", categoryRouter);
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
 });
+
+const job = new CronJob("0 0 1 * *", async function () {
+  await prisma.budget.updateMany({
+    data: { spend: 0 },
+  });
+});
+job.start();
 
 // Make sure errorHandler is called last
 app.use(errorHandler);

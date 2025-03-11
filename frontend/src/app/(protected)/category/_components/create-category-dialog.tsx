@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { CircleOff, Loader2 } from "lucide-react";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogTitle, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
 import { ReactNode, useState } from "react"
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,6 @@ import Picker from "@emoji-mart/react"
 import data from "@emoji-mart/data"
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { Category } from "../page";
 
 interface Props {

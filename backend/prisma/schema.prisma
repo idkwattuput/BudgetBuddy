@@ -61,6 +61,7 @@ model Transaction {
 model Budget {
   id          String   @id @default(uuid())
   limit       Decimal  @db.Decimal(10, 2)
+  spend       Decimal  @db.Decimal(10, 2)
   category_id String
   category    Category @relation(fields: [category_id], references: [id])
   user_id     String

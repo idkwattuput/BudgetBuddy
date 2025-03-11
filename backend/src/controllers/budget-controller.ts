@@ -1,5 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import budgetRepository from "../repositories/budget-repository";
+import categoryRepository from "../repositories/category-repository";
+import transactionRepository from "../repositories/transaction-repository";
+import { getMonth, getYear } from "date-fns";
 
 async function getBudgets(req: Request, res: Response, next: NextFunction) {
   try {
@@ -18,7 +21,29 @@ async function createBudget(req: Request, res: Response, next: NextFunction) {
     if (!limit || !categoryId) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const newBudget = await budgetRepository.save(userId, limit, categoryId);
+    const isCategoryExist = await categoryRepository.find(categoryId);
+    if (!isCategoryExist) {
+      return res.status(404).json({ message: "Category doesn't exist" });
+    }
+    const currentMonth = getMonth(new Date()) + 1;
+    const currentYear = getYear(new Date());
+    const startDate = new Date(currentYear, currentMonth - 1, 1);
+    const endDate = new Date(currentYear, currentMonth, 1);
+    const expenseByCategory = await transactionRepository.findByCategory(
+      categoryId,
+      startDate,
+      endDate,
+    );
+    const spend =
+      Number(limit) > Number(expenseByCategory._sum.amount)
+        ? Number(expenseByCategory._sum.amount)
+        : Number(limit);
+    const newBudget = await budgetRepository.save(
+      userId,
+      limit,
+      spend,
+      categoryId,
+    );
     return res.status(201).json({ data: newBudget });
   } catch (error) {
     next(error);

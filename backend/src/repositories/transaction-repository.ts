@@ -24,6 +24,23 @@ async function findAll(userId: string, page: number, limit: number) {
   });
 }
 
+async function totalAmountByCategory(
+  categoryId: string,
+  startDate: Date,
+  endDate: Date,
+) {
+  return await prisma.transaction.aggregate({
+    where: {
+      category_id: categoryId,
+      date: { gte: startDate, lte: endDate },
+      type: "EXPENSE",
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+}
+
 async function find(id: string) {
   return await prisma.transaction.findUnique({
     where: { id: id },
@@ -45,6 +62,7 @@ async function remove(id: string) {
 export default {
   findAll,
   find,
+  findByCategory: totalAmountByCategory,
   save,
   remove,
 };

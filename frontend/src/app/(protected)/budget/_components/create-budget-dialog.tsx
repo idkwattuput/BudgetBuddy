@@ -9,22 +9,23 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/use-axios-private";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { Bank } from "../page";
+import { Budget } from "../page";
 import { Button } from "@/components/ui/button";
+import CategoryComboBox from "../../transaction/_components/category-combo-box";
 
 interface Props {
-  onChange: (bank: Bank) => void
+  onChange: (budget: Budget) => void
 }
 
 const FormSchema = z.object({
-  bankName: z.string().min(3).max(20),
-  accountName: z.string().min(3).max(20),
+  limit: z.string().min(3).max(20),
+  categoryId: z.string().min(1),
 });
 
 
-export default function CreateBankDialog({ onChange }: Props) {
+export default function CreateBudgetDialog({ onChange }: Props) {
   const axiosPrivate = useAxiosPrivate()
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState(false)
@@ -36,20 +37,20 @@ export default function CreateBankDialog({ onChange }: Props) {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setPending(true)
-      const response = await axiosPrivate.post("/api/v1/banks",
+      const response = await axiosPrivate.post("/api/v1/budgets",
         JSON.stringify({
-          bankName: data.bankName,
-          accountName: data.accountName,
+          limit: data.limit,
+          categoryId: data.categoryId,
         }),
         {
           headers: { "Content-Type": "application/json" },
         }
       )
       form.reset({
-        bankName: "",
-        accountName: "",
+        limit: "",
+        categoryId: "",
       })
-      toast.success(`${data.bankName} created`)
+      toast.success(`Budget created`)
       onChange(response.data.data)
       setPending(false)
       setOpen((prev) => !prev)
@@ -59,47 +60,53 @@ export default function CreateBankDialog({ onChange }: Props) {
     }
   }
 
+  const handleCategoryChange = useCallback((categoryId: string) => {
+    form.setValue("categoryId", categoryId)
+  }, [form])
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Card className="p-4 flex items-center gap-2 bg-muted">
+        <Card className="h-full p-4 flex justify-center items-center gap-2 bg-muted">
           <Plus />
-          <h1 className="text-xl font-bold">Add Bank</h1>
+          <h1 className="text-xl font-bold">Add Budget</h1>
         </Card>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new bank</DialogTitle>
+          <DialogTitle>Add new budget</DialogTitle>
           <DialogDescription>You can use bank info to trace transaction easily</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="bankName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bank Name</FormLabel>
-                  <FormControl>
-                    <Input defaultValue={""} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="accountName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Account Name</FormLabel>
-                  <FormControl>
-                    <Input defaultValue={""} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex items-center justify-between gap-2">
+              <FormField
+                control={form.control}
+                name="limit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Limit</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <CategoryComboBox type={"EXPENSE"} onChange={handleCategoryChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </form>
         </Form>
         <DialogFooter>
