@@ -60,7 +60,7 @@ export default function Setup() {
       toast.success("Welcome to Budget Buddy 🎉")
       router.push("/dashboard")
     } catch (error) {
-      console.error(error)
+      console.log(error)
     }
   }
 

@@ -3,6 +3,7 @@ import { prisma } from "../database/db";
 async function find(id: string) {
   return await prisma.user.findUnique({
     where: { id: id },
+    select: { first_name: true, last_name: true, email: true },
   });
 }
 
@@ -15,6 +16,13 @@ async function findByEmail(email: string) {
 async function findByRefreshToken(refreshToken: string) {
   return await prisma.user.findUnique({
     where: { refresh_token: refreshToken },
+  });
+}
+
+async function findPasswordByUserId(id: string) {
+  return prisma.user.findUnique({
+    where: { id: id },
+    select: { password: true },
   });
 }
 
@@ -89,6 +97,7 @@ export default {
   find,
   findByEmail,
   findByRefreshToken,
+  findPasswordByUserId,
   save,
   updateInfo,
   updatePassword,

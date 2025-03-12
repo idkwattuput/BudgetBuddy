@@ -17,6 +17,8 @@ const mobileItems = [
   { label: "Transaction", href: "/transaction", },
   { label: "Budget", href: "/budget", },
   { label: "Bank", href: "/bank", },
+  { label: "Category", href: "/category" },
+  { label: "Profile", href: "/profile" },
 ]
 
 export default function Navbar() {
