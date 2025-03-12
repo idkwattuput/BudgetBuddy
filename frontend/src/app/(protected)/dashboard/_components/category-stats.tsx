@@ -5,12 +5,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -28,15 +26,22 @@ interface CategoryStats {
   amount: string
 }
 
-interface ChartConfigPayload {
-  label: string,
-  color: string
+interface Category {
+  category: string
+  amount: string
+}
+
+interface ChartConfig {
+  [key: string]: {
+    label: string;
+    color: string;
+  };
 }
 
 export default function CategoryStats() {
   const axiosPrivate = useAxiosPrivate()
   const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([])
-  const [chartConfig, setChartConfig] = useState<ChartConfigPayload>({})
+  const [chartConfig, setChartConfig] = useState<ChartConfig>({})
   const [loading, setLoading] = useState(true)
 
   function getRandomColor() {
@@ -49,7 +54,7 @@ export default function CategoryStats() {
         setLoading(true)
         const response = await axiosPrivate.get("/api/v1/transactions/category")
         setChartConfig(
-          response.data.data.reduce((acc, category) => {
+          response.data.data.reduce((acc: ChartConfig, category: Category) => {
             acc[category.category.toLowerCase()] = {
               label: category.category.toLowerCase(),
               color: getRandomColor()
@@ -58,7 +63,7 @@ export default function CategoryStats() {
           }, {})
         )
         setCategoryStats(
-          response.data.data.map((category) => ({
+          response.data.data.map((category: Category) => ({
             category: category.category.toLowerCase(),
             amount: Number(category.amount),
             fill: `var(--color-${category.category.toLowerCase()})`
@@ -123,7 +128,7 @@ export default function CategoryStats() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {categoryStats.reduce((sum, item) => sum + item.amount, 0)}
+                          {categoryStats.reduce((sum: number, item: CategoryStats) => sum + Number(item.amount), 0)}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

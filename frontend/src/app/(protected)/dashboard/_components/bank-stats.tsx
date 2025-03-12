@@ -93,9 +93,15 @@ export default function BankStats() {
   return (
     <Card className="flex flex-col">
       <CardContent className="flex-1 pb-0">
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent
+                hideLabel />}
+            />
             <Pie
               data={bankStats}
               dataKey="amount"
@@ -105,19 +111,31 @@ export default function BankStats() {
             >
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox?.cx && viewBox?.cy) {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                        <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                          {bankStats.reduce((sum, item) => sum + item.amount, 0)}
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-3xl font-bold"
+                        >
+                          {bankStats.reduce((sum: number, item: BankStats) => sum + Number(item.amount), 0)}
                         </tspan>
-                        <tspan x={viewBox.cx} y={viewBox.cy + 24} className="fill-muted-foreground">
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
                           Expense
                         </tspan>
                       </text>
-                    );
+                    )
                   }
-                  return null;
                 }}
               />
             </Pie>

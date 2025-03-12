@@ -86,7 +86,7 @@ export default function Setup() {
               <FormField
                 control={form.control}
                 name="currency"
-                render={({ field }) => (
+                render={({ }) => (
                   <FormItem className="grid gap-2">
                     <FormControl>
                       <CurrencyComboBox onChange={handleCurrencyChange} />

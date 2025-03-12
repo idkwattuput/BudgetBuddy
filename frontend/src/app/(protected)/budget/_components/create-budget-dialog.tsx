@@ -96,7 +96,7 @@ export default function CreateBudgetDialog({ onChange }: Props) {
               <FormField
                 control={form.control}
                 name="categoryId"
-                render={({ field }) => (
+                render={({ }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
