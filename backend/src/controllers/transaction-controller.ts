@@ -1,5 +1,86 @@
 import type { Request, Response, NextFunction } from "express";
 import transactionRepository from "../repositories/transaction-repository";
+import { getMonth, getYear } from "date-fns";
+
+async function getBankStats(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = (req as any).user.id;
+    const bankStats = await transactionRepository.bankStats(userId);
+    return res.json({ data: bankStats });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getCategoryStats(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const userId = (req as any).user.id;
+    const categoryStats = await transactionRepository.categoryStats(userId);
+    return res.json({ data: categoryStats });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getOverviewStats(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const userId = (req as any).user.id;
+    const currentMonth = getMonth(new Date()) + 1;
+    const currentYear = getYear(new Date());
+    const startDate = new Date(currentYear, currentMonth - 1, 1);
+    const endDate = new Date(currentYear, currentMonth, 1);
+    const overviewStats = await transactionRepository.overviewStats(
+      userId,
+      startDate,
+      endDate,
+    );
+    return res.json({ data: overviewStats });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getTransactionStats(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const userId = (req as any).user.id;
+    const year = Number(req.query.year) || getYear(new Date());
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year, 11, 31);
+    const yearStats = await transactionRepository.yearStats(
+      userId,
+      startDate,
+      endDate,
+    );
+    const monthlyStats = Array.from({ length: 12 }, (_, i) => ({
+      month: new Date(year, i, 1).toLocaleString("default", { month: "long" }),
+      income: 0,
+      expense: 0,
+    }));
+    yearStats.forEach(({ amount, type, date }) => {
+      const monthIndex = new Date(date).getMonth();
+      if (type === "INCOME") {
+        monthlyStats[monthIndex].income += Number(amount);
+      } else if (type === "EXPENSE") {
+        monthlyStats[monthIndex].expense += Number(amount);
+      }
+    });
+    return res.json({ data: monthlyStats });
+  } catch (error) {
+    next(error);
+  }
+}
 
 async function getTransactions(
   req: Request,
@@ -76,6 +157,10 @@ async function deleteTransaction(
 }
 
 export default {
+  getBankStats,
+  getCategoryStats,
+  getOverviewStats,
+  getTransactionStats,
   getTransactions,
   createTransaction,
   deleteTransaction,
