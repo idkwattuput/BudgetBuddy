@@ -23,7 +23,7 @@ export type Transaction = {
 export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "date",
-    header: ({ column }) => {
+    header: ({ }) => {
       return (
         <div className="text-center">Date</div>
       )
@@ -41,7 +41,7 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "description",
-    header: ({ column }) => {
+    header: ({ }) => {
       return (
         <div className="text-center">Description</div>
       )
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "category",
-    header: ({ column }) => {
+    header: ({ }) => {
       return (
         <div className="text-center">Category</div>
       )
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "bank",
-    header: ({ column }) => {
+    header: ({ }) => {
       return (
         <div className="text-center">Bank</div>
       )
@@ -79,7 +79,7 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => {
+    header: ({ }) => {
       return (
         <div className="text-center">Amount</div>
       )
@@ -93,7 +93,7 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "type",
-    header: ({ column }) => {
+    header: ({ }) => {
       return (
         <div className="text-center">Type</div>
       )

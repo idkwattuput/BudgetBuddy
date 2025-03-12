@@ -43,6 +43,9 @@ export default function AddTransactionDialog({ children, type }: Props) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      description: "",
+      amount: 0,
+      bankId: "",
       type: type,
       date: new Date(),
     },
@@ -50,6 +53,7 @@ export default function AddTransactionDialog({ children, type }: Props) {
 
   const handleCategoryChange = useCallback((categoryId: string) => {
     form.setValue("categoryId", categoryId)
+    console.log("From handleCategoryChange", categoryId)
   }, [form])
 
   const handleBankChange = useCallback((bankId: string) => {
@@ -117,7 +121,7 @@ export default function AddTransactionDialog({ children, type }: Props) {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input defaultValue={""} {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,7 +145,7 @@ export default function AddTransactionDialog({ children, type }: Props) {
               <FormField
                 control={form.control}
                 name="bankId"
-                render={({ field }) => (
+                render={({ }) => (
                   <FormItem>
                     <FormLabel>Bank</FormLabel>
                     <FormControl>
@@ -157,7 +161,7 @@ export default function AddTransactionDialog({ children, type }: Props) {
               <FormField
                 control={form.control}
                 name="categoryId"
-                render={({ field }) => (
+                render={({ }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>

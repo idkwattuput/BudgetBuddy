@@ -1,8 +1,7 @@
 "use client"
 
-import { Card } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, Plus, PlusSquare } from "lucide-react";
+import { Loader2, PlusSquare } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import useAxiosPrivate from "@/hooks/use-axios-private";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Bank } from "../page";
 import { Button } from "@/components/ui/button";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Bank } from "../../bank/page";
 
 interface Props {
   onChange: (bank: Bank) => void
@@ -31,7 +30,11 @@ export default function CreateBankDialog({ onChange }: Props) {
   const [pending, setPending] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema)
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      bankName: "",
+      accountName: ""
+    }
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -85,7 +88,7 @@ export default function CreateBankDialog({ onChange }: Props) {
                 <FormItem>
                   <FormLabel>Bank Name</FormLabel>
                   <FormControl>
-                    <Input defaultValue={""} {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,7 +101,7 @@ export default function CreateBankDialog({ onChange }: Props) {
                 <FormItem>
                   <FormLabel>Account Name</FormLabel>
                   <FormControl>
-                    <Input defaultValue={""} {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

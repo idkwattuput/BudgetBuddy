@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { useCallback, useEffect, useState } from "react"
 import { Bank } from "../../bank/page"
 import CreateBankDialog from "./create-bank-dialog"
+import SkeletonWrapper from "@/components/skeleton-wrapper"
 
 interface Props {
   onChange: (bankId: string) => void
@@ -46,57 +47,61 @@ export default function BankComboBox({ onChange }: Props) {
   const successCallback = useCallback((bank: Bank) => {
     setBanks((prev) => [...prev, bank])
     setValue(bank.account_name)
+    setBankId(bank.id)
+    onChange(bank.id)
     setOpen((prev) => !prev)
   }, [setValue, setOpen])
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant={"outline"} role="combobox" aria-expanded={open} className="w-[200px] justify-between">
-          {selectedBank ? (
-            <BankRow bank={selectedBank} />
-          ) : (
-            "Select bank"
-          )}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command onSubmit={(e) => {
-          e.preventDefault()
-        }}>
-          <CommandInput placeholder="Search bank..." />
-          <CreateBankDialog onChange={successCallback} />
-          <CommandEmpty>
-            <p>Bank not found</p>
-            <p className="text-xs text-muted-foreground">Tip: Create a new bank</p>
-          </CommandEmpty>
-          <CommandGroup>
-            <CommandList>
-              {
-                banks && banks.map((bank: Bank) => (
-                  <CommandItem
-                    key={bank.id}
-                    onSelect={() => {
-                      setValue(bank.account_name)
-                      setBankId(bank.id)
-                      setOpen((prev) => !prev)
-                    }}
-                  >
-                    <BankRow bank={bank} />
-                    <Check className={cn(
-                      "mr-2 w-4 h-4 opacity-0",
-                      value === bank.account_name && "opacity-100"
+    <SkeletonWrapper isLoading={loading}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant={"outline"} role="combobox" aria-expanded={open} className="w-[200px] justify-between">
+            {selectedBank ? (
+              <BankRow bank={selectedBank} />
+            ) : (
+              "Select bank"
+            )}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command onSubmit={(e) => {
+            e.preventDefault()
+          }}>
+            <CommandInput placeholder="Search bank..." />
+            <CreateBankDialog onChange={successCallback} />
+            <CommandEmpty>
+              <p>Bank not found</p>
+              <p className="text-xs text-muted-foreground">Tip: Create a new bank</p>
+            </CommandEmpty>
+            <CommandGroup>
+              <CommandList>
+                {
+                  banks && banks.map((bank: Bank) => (
+                    <CommandItem
+                      key={bank.id}
+                      onSelect={() => {
+                        setValue(bank.account_name)
+                        setBankId(bank.id)
+                        setOpen((prev) => !prev)
+                      }}
+                    >
+                      <BankRow bank={bank} />
+                      <Check className={cn(
+                        "mr-2 w-4 h-4 opacity-0",
+                        value === bank.account_name && "opacity-100"
 
-                    )} />
-                  </CommandItem>
-                ))
-              }
-            </CommandList>
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+                      )} />
+                    </CommandItem>
+                  ))
+                }
+              </CommandList>
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </SkeletonWrapper>
   )
 }
 

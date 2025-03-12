@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,11 @@ import data from "@emoji-mart/data"
 import useAxiosPrivate from "@/hooks/use-axios-private";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import { Category } from "../../category/page";
 
 interface Props {
   type: "INCOME" | "EXPENSE"
-  successCallback: (category: any) => void
+  successCallback: (category: Category) => void
 }
 
 const FormSchema = z.object({
@@ -35,6 +36,8 @@ export default function CreateCategoryDialog({ type, successCallback }: Props) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      name: "",
+      icon: "",
       type: type,
     },
   });
@@ -42,7 +45,7 @@ export default function CreateCategoryDialog({ type, successCallback }: Props) {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setPending(true)
-      await axiosPrivate.post("/api/v1/category",
+      const response = await axiosPrivate.post("/api/v1/category",
         JSON.stringify({
           name: data.name,
           icon: data.icon,
@@ -59,7 +62,7 @@ export default function CreateCategoryDialog({ type, successCallback }: Props) {
       })
 
       toast.success(`Category ${data.name} created`)
-      successCallback(data)
+      successCallback(response.data.data)
       setPending(false)
       setOpen((prev) => !prev)
     } catch (error) {
