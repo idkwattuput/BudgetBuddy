@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import transactionRepository from "../repositories/transaction-repository";
 import { getMonth, getYear } from "date-fns";
+import budgetRepository from "../repositories/budget-repository";
 
 async function getBankStats(req: Request, res: Response, next: NextFunction) {
   try {
@@ -121,6 +122,13 @@ async function createTransaction(
       typeof categoryId !== "string"
     ) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+    const isBudgetExist = await budgetRepository.findByCategory(
+      categoryId,
+      userId,
+    );
+    if (isBudgetExist) {
+      await budgetRepository.updateSpend(isBudgetExist.id, amount);
     }
     const transactionPayload = {
       user_id: userId,

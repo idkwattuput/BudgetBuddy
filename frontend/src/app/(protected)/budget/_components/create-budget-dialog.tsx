@@ -31,7 +31,11 @@ export default function CreateBudgetDialog({ onChange }: Props) {
   const [pending, setPending] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema)
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      limit: "",
+      categoryId: ""
+    }
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -55,7 +59,7 @@ export default function CreateBudgetDialog({ onChange }: Props) {
       setPending(false)
       setOpen((prev) => !prev)
     } catch (error) {
-      console.error(error)
+      console.log(error)
       setPending(false)
     }
   }
@@ -67,15 +71,17 @@ export default function CreateBudgetDialog({ onChange }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Card className="h-full p-4 flex justify-center items-center gap-2 bg-muted">
+        <Card className="h-full p-4 flex justify-center items-center gap-2 bg-muted border-dashed border-2 border-muted-foreground">
           <Plus />
-          <h1 className="text-xl font-bold">Add Budget</h1>
+          <h1 className="text-xl font-bold">Create New Budget</h1>
         </Card>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new budget</DialogTitle>
-          <DialogDescription>You can use bank info to trace transaction easily</DialogDescription>
+          <DialogTitle>Create New Budget</DialogTitle>
+          <DialogDescription>
+            You can plan your financial easily.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

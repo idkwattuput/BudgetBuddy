@@ -17,6 +17,14 @@ async function find(id: string) {
   });
 }
 
+async function findByCategory(cateogryId: string, userId: string) {
+  return await prisma.budget.findUnique({
+    where: {
+      category_id_user_id: { category_id: cateogryId, user_id: userId },
+    },
+  });
+}
+
 async function save(
   userId: string,
   limit: number,
@@ -46,6 +54,15 @@ async function update(id: string, limit: number) {
   });
 }
 
+async function updateSpend(id: string, spend: number) {
+  return await prisma.budget.update({
+    where: { id: id },
+    data: {
+      spend: { increment: spend },
+    },
+  });
+}
+
 async function remove(id: string) {
   return await prisma.budget.delete({
     where: { id: id },
@@ -55,7 +72,9 @@ async function remove(id: string) {
 export default {
   findAll,
   find,
+  findByCategory,
   save,
   update,
+  updateSpend,
   remove,
 };

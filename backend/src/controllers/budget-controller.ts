@@ -29,7 +29,7 @@ async function createBudget(req: Request, res: Response, next: NextFunction) {
     const currentYear = getYear(new Date());
     const startDate = new Date(currentYear, currentMonth - 1, 1);
     const endDate = new Date(currentYear, currentMonth, 1);
-    const expenseByCategory = await transactionRepository.findByCategory(
+    const expenseByCategory = await transactionRepository.totalAmountByCategory(
       categoryId,
       startDate,
       endDate,

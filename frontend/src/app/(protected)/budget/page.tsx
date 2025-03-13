@@ -67,15 +67,17 @@ export default function Budget() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Budget</h1>
-      <div className="h-full mt-4 grid grid-cols-3 gap-4">
+      <div className="h-full mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <CreateBudgetDialog onChange={handleNewBudget} />
         {budgets.length > 0 && (
-          budgets.map((budget) => {
-            const percentageUsed = (budget.spend / budget.limit) * 100
-            return (
-              <BudgetFeed key={budget.id} budget={budget} percentageUsed={percentageUsed} onChange={handleDeleteBudget} />
-            )
-          })
+          <>
+            {budgets.map((budget) => {
+              const percentageUsed = Number(budget.spend) < Number(budget.limit) ? (budget.spend / budget.limit) * 100 : 100;
+              return (
+                <BudgetFeed key={budget.id} budget={budget} percentageUsed={percentageUsed} onChange={handleDeleteBudget} />
+              )
+            })}
+          </>
         )}
       </div>
     </div>
