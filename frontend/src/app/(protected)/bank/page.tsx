@@ -64,7 +64,7 @@ export default function Bank() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Bank</h1>
-      <div className="mt-4 grid grid-cols-3 gap-4">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <CreateBankDialog onChange={handleNewBank} />
         {banks.length > 0 && (
           banks.map((bank) => (

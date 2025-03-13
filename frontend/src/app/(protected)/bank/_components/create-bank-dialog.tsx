@@ -62,14 +62,14 @@ export default function CreateBankDialog({ onChange }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Card className="p-4 flex items-center gap-2 bg-muted">
+        <Card className="h-full p-4 flex justify-center items-center gap-2 bg-muted border-dashed border-2 border-muted-foreground">
           <Plus />
-          <h1 className="text-xl font-bold">Add Bank</h1>
+          <h1 className="text-xl font-bold">Create New Bank</h1>
         </Card>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new bank</DialogTitle>
+          <DialogTitle>Create New Bank</DialogTitle>
           <DialogDescription>You can use bank info to trace transaction easily</DialogDescription>
         </DialogHeader>
         <Form {...form}>

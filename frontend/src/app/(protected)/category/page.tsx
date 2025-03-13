@@ -77,13 +77,11 @@ export default function Category() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Category</h1>
-      <div className="mt-4 grid grid-cols-3 gap-4">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <CreateCategoryDialog type="INCOME" onChange={handleNewCategory}>
-          <Card className="h-full bg-muted">
-            <div className="h-full flex flex-row justify-center items-center gap-2">
-              <Plus />
-              <h1 className="text-xl font-bold">Add <span className="text-emerald-500">Income</span> Category</h1>
-            </div>
+          <Card className="h-full p-4 flex justify-center items-center gap-2 bg-muted border-dashed border-2 border-muted-foreground">
+            <Plus />
+            <h1 className="text-xl font-bold">Add <span className="text-emerald-500">Income</span> Category</h1>
           </Card>
         </CreateCategoryDialog>
         {incomeCategories.length > 0 && (
@@ -92,13 +90,11 @@ export default function Category() {
           ))
         )}
       </div>
-      <div className="mt-10 grid grid-cols-3 gap-4">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <CreateCategoryDialog type="EXPENSE" onChange={handleNewCategory}>
-          <Card className="h-full bg-muted">
-            <div className="h-full flex flex-row justify-center items-center gap-2">
-              <Plus />
-              <h1 className="text-xl font-bold">Add <span className="text-red-500">Expense</span> Category</h1>
-            </div>
+          <Card className="h-full p-4 flex justify-center items-center gap-2 bg-muted border-dashed border-2 border-muted-foreground">
+            <Plus />
+            <h1 className="text-xl font-bold">Add <span className="text-red-500">Expense</span> Category</h1>
           </Card>
         </CreateCategoryDialog>
         {expenseCategories.length > 0 && (
