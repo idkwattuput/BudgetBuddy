@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Budget } from "../page"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -23,7 +23,6 @@ export default function BudgetFeed({ budget, percentageUsed, onChange }: Props) 
           </div>
           <div className="flex items-center gap-2">
             {budget.user.currency}{budget.limit}
-            <DeleteBudgetDialog budget={budget} onChange={onChange} />
           </div>
         </CardTitle>
       </CardHeader>
@@ -41,6 +40,9 @@ export default function BudgetFeed({ budget, percentageUsed, onChange }: Props) 
           )}
         </div>
       </CardContent>
+      <CardFooter>
+        <DeleteBudgetDialog budget={budget} onChange={onChange} />
+      </CardFooter>
     </Card>
   )
 }

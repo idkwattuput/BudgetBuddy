@@ -34,7 +34,7 @@ export default function DeleteBankDialog({ bank, onChange }: Props) {
       <DialogTrigger asChild>
         <Button
           variant={"destructive"}
-          size={"icon"}
+          className="w-full"
         >
           <Trash />
         </Button>

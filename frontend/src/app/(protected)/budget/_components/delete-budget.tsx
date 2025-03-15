@@ -34,7 +34,7 @@ export default function DeleteBudgetDialog({ budget, onChange }: Props) {
       <DialogTrigger asChild>
         <Button
           variant={"destructive"}
-          size={"icon"}
+          className="w-full"
         >
           <Trash />
         </Button>

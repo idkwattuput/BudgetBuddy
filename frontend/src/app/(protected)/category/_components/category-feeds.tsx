@@ -1,6 +1,7 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Category } from "../page"
 import DeleteCategoryDialog from "./delete-category-dialog"
+import { Button } from "@/components/ui/button"
 
 interface Props {
   category: Category
@@ -10,13 +11,17 @@ interface Props {
 export default function CategoryFeeds({ category, onChange }: Props) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center gap-2">
-        <div className="flex-1 flex-col gap-1.5 justify-center items-center">
-          {category.icon}
-          <CardTitle>{category.name}</CardTitle>
-        </div>
-        <DeleteCategoryDialog category={category} onChange={onChange} />
+      <CardHeader>
+        <CardTitle className="text-xl flex flex-col justify-between items-center">
+          <Button variant="secondary" size="icon" className="rounded-full">
+            {category.icon}
+          </Button>
+          <span className="ml-2">{category.name}</span>
+        </CardTitle>
       </CardHeader>
+      <CardFooter>
+        <DeleteCategoryDialog category={category} onChange={onChange} />
+      </CardFooter>
     </Card>
   )
 }

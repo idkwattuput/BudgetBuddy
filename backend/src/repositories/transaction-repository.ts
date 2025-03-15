@@ -93,9 +93,21 @@ async function yearStats(userId: string, startDate: Date, endDate: Date) {
   });
 }
 
-async function findAll(userId: string, page: number, limit: number) {
+async function findAll(
+  userId: string,
+  page: number,
+  limit: number,
+  categoryIds: string[] = [],
+  bankIds: string[] = [],
+  types: ("INCOME" | "EXPENSE")[] = [],
+) {
   return await prisma.transaction.findMany({
-    where: { user_id: userId },
+    where: {
+      user_id: userId,
+      ...(categoryIds.length > 0 ? { category_id: { in: categoryIds } } : {}),
+      ...(bankIds.length > 0 ? { bank_id: { in: bankIds } } : {}),
+      ...(types.length > 0 ? { type: { in: types } } : {}),
+    },
     include: {
       user: { select: { currency: true } },
       category: { select: { name: true, icon: true } },

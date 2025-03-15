@@ -90,12 +90,18 @@ async function getTransactions(
 ) {
   try {
     const userId = (req as any).user.id;
+    const categoryIds = req.query.categoryIds;
+    const bankIds = req.query.bankIds;
+    const types = req.query.types;
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const transactions = await transactionRepository.findAll(
       userId,
       page,
       limit,
+      categoryIds,
+      bankIds,
+      types,
     );
     return res.json({ data: transactions });
   } catch (error) {

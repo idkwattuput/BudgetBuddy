@@ -73,7 +73,7 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     cell: ({ row }) => (
       <div className="flex gap-2 capitalize items-center justify-center">
-        <div className="capitalize">{row.original?.bank?.bank_name || "None"}</div>
+        <div className="capitalize">{row.original?.bank?.bank_name || "-"}</div>
       </div>
     ),
   },
