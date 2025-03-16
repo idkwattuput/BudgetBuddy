@@ -25,8 +25,7 @@ import useAxiosPrivate from "@/hooks/use-axios-private"
 interface DataTableFacetedFilterProps {
   title?: string
   type: string
-  onChange: (value: string, type: string) => void
-  onDelete: (value: string, type: string) => void
+  onChange: (value: string[], type: string) => void
 }
 
 interface Options {
@@ -41,7 +40,6 @@ export function DataTableFacetedFilter({
   title,
   type,
   onChange,
-  onDelete,
 }: DataTableFacetedFilterProps) {
   const axiosPrivate = useAxiosPrivate()
   const [selectedValues, setSelectedValues] = useState(new Set<string>())
@@ -50,6 +48,7 @@ export function DataTableFacetedFilter({
   useEffect(() => {
     async function getData() {
       try {
+        console.log("getData")
         const api = type === "category" ? "category" : "banks"
         const response = await axiosPrivate.get(`/api/v1/${api}`)
         const optionsMap = new Map()
@@ -75,7 +74,11 @@ export function DataTableFacetedFilter({
         { id: "2", value: "EXPENSE", label: "Expense", type: "type" }
       ])
     }
-  }, [type])
+  }, [])
+
+  useEffect(() => {
+    onChange(Array.from(selectedValues), type)
+  }, [selectedValues])
 
   return (
     <Popover>
@@ -102,7 +105,7 @@ export function DataTableFacetedFilter({
                   </Badge>
                 ) : (
                   options
-                    .filter((option) => selectedValues.has(option.value))
+                    .filter((option) => option.type === "type" ? selectedValues.has(option.value) : selectedValues.has(option.id))
                     .map((option) => (
                       <Badge
                         variant="secondary"
@@ -125,7 +128,7 @@ export function DataTableFacetedFilter({
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
-                const isSelected = selectedValues.has(option.value)
+                const isSelected = option.type === "type" ? selectedValues.has(option.value) : selectedValues.has(option.id)
                 return (
                   <CommandItem
                     key={option.value}
@@ -133,17 +136,13 @@ export function DataTableFacetedFilter({
                       const newSelected = new Set(prev)
                       if (newSelected.has(option.value)) {
                         newSelected.delete(option.value)
-                        if (option.type === "type") {
-                          onDelete(option.value, option.type)
-                        } else {
-                          onDelete(option.id, option.type)
-                        }
+                      } else if (newSelected.has(option.id)) {
+                        newSelected.delete(option.id)
                       } else {
-                        newSelected.add(option.value)
                         if (option.type === "type") {
-                          onChange(option.value, option.type)
+                          newSelected.add(option.value)
                         } else {
-                          onChange(option.id, option.type)
+                          newSelected.add(option.id)
                         }
                       }
                       return newSelected

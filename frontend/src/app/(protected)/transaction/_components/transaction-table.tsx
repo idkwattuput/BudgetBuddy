@@ -6,28 +6,13 @@ import { DataTable } from "./data-table"
 import { useEffect, useState } from "react"
 import SkeletonWrapper from "@/components/skeleton-wrapper"
 import { Button } from "@/components/ui/button"
-import { Category } from "../../category/page"
 import { DataTableFacetedFilter } from "@/components/datatable/faceted-filters"
-import { Bank } from "../../bank/page"
-
-interface FilterProps {
-  id: string
-  value: string
-  label: string
-  type: string
-}
 
 export default function TransactionTable() {
   const axiosPrivate = useAxiosPrivate()
   const [data, setData] = useState([])
-  const [categories, setCategories] = useState<FilterProps[]>([])
   const [categoriesMap, setCategoriesMap] = useState<string[]>([])
-  const [banks, setBanks] = useState<FilterProps[]>([])
   const [banksMap, setBanksMap] = useState<string[]>([])
-  const [types, setTypes] = useState<FilterProps[]>([
-    { id: "1", value: "INCOME", label: "Income", type: "type" },
-    { id: "2", value: "EXPENSE", label: "Expense", type: "type" }
-  ])
   const [typesMap, setTypesMap] = useState<string[]>([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
@@ -88,32 +73,22 @@ export default function TransactionTable() {
     };
   }, [page, categoriesMap, banksMap, typesMap])
 
-  function handleFilterChange(value: string, type: string) {
+  function handleFilterChange(values: string[], type: string) {
     if (type === "category") {
-      setCategoriesMap((prev) => [...prev, value])
+      setCategoriesMap(values);
     } else if (type === "bank") {
-      setBanksMap((prev) => [...prev, value])
+      setBanksMap(values);
     } else {
-      setTypesMap((prev) => [...prev, value])
-    }
-  }
-
-  function handleRemoveFilterChange(value: string, type: string) {
-    if (type === "category") {
-      setCategoriesMap((prev) => prev.filter((p) => p !== value))
-    } else if (type === "bank") {
-      setBanksMap((prev) => prev.filter((p) => p !== value))
-    } else {
-      setTypesMap((prev) => prev.filter((p) => p !== value))
+      setTypesMap(values);
     }
   }
 
   return (
     <div className="mt-4">
       <div className="flex items-center gap-4">
-        <DataTableFacetedFilter title="Category" type={"category"} onChange={handleFilterChange} onDelete={handleRemoveFilterChange} />
-        <DataTableFacetedFilter title="Bank" type={"bank"} onChange={handleFilterChange} onDelete={handleRemoveFilterChange} />
-        <DataTableFacetedFilter title="Type" type={"type"} onChange={handleFilterChange} onDelete={handleRemoveFilterChange} />
+        <DataTableFacetedFilter title="Category" type={"category"} onChange={handleFilterChange} />
+        <DataTableFacetedFilter title="Bank" type={"bank"} onChange={handleFilterChange} />
+        <DataTableFacetedFilter title="Type" type={"type"} onChange={handleFilterChange} />
       </div>
       <SkeletonWrapper isLoading={loading}>
         <DataTable columns={columns} data={data} />
