@@ -7,10 +7,17 @@ import { useEffect, useState } from "react"
 import SkeletonWrapper from "@/components/skeleton-wrapper"
 import { Button } from "@/components/ui/button"
 import { DataTableFacetedFilter } from "@/components/datatable/faceted-filters"
+import { DatePickerWithRange } from "./date-range-picker"
+import { DateRange } from "react-day-picker"
+import { endOfMonth, startOfMonth } from "date-fns"
 
 export default function TransactionTable() {
   const axiosPrivate = useAxiosPrivate()
   const [data, setData] = useState([])
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: startOfMonth(new Date()),
+    to: endOfMonth(new Date())
+  })
   const [categoriesMap, setCategoriesMap] = useState<string[]>([])
   const [banksMap, setBanksMap] = useState<string[]>([])
   const [typesMap, setTypesMap] = useState<string[]>([])
@@ -26,6 +33,8 @@ export default function TransactionTable() {
           {
             params: {
               page,
+              from: date?.from?.toISOString(),
+              to: date?.to?.toISOString(),
               categoryIds: categoriesMap.length > 0 ? categoriesMap : "",
               bankIds: banksMap.length > 0 ? banksMap : "",
               types: typesMap.length > 0 ? typesMap : "",
@@ -48,6 +57,8 @@ export default function TransactionTable() {
           {
             params: {
               page,
+              from: date?.from?.toISOString(),
+              to: date?.to?.toISOString(),
               categoryIds: categoriesMap.length > 0 ? categoriesMap : "",
               bankIds: banksMap.length > 0 ? banksMap : "",
               types: typesMap.length > 0 ? typesMap : "",
@@ -71,7 +82,7 @@ export default function TransactionTable() {
     return () => {
       window.removeEventListener("transactionChange", handleTransactionChange);
     };
-  }, [page, categoriesMap, banksMap, typesMap])
+  }, [page, categoriesMap, banksMap, typesMap, date])
 
   function handleFilterChange(values: string[], type: string) {
     if (type === "category") {
@@ -85,10 +96,13 @@ export default function TransactionTable() {
 
   return (
     <div className="mt-4">
-      <div className="flex items-center gap-4">
-        <DataTableFacetedFilter title="Category" type={"category"} onChange={handleFilterChange} />
-        <DataTableFacetedFilter title="Bank" type={"bank"} onChange={handleFilterChange} />
-        <DataTableFacetedFilter title="Type" type={"type"} onChange={handleFilterChange} />
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-4">
+          <DataTableFacetedFilter title="Category" type={"category"} onChange={handleFilterChange} />
+          <DataTableFacetedFilter title="Bank" type={"bank"} onChange={handleFilterChange} />
+          <DataTableFacetedFilter title="Type" type={"type"} onChange={handleFilterChange} />
+        </div>
+        <DatePickerWithRange date={date} onDateChange={setDate} />
       </div>
       <SkeletonWrapper isLoading={loading}>
         <DataTable columns={columns} data={data} />

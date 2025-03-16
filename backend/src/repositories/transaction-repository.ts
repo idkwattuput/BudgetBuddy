@@ -97,6 +97,8 @@ async function findAll(
   userId: string,
   page: number,
   limit: number,
+  from: Date,
+  to: Date,
   categoryIds: string[] = [],
   bankIds: string[] = [],
   types: ("INCOME" | "EXPENSE")[] = [],
@@ -104,6 +106,7 @@ async function findAll(
   return await prisma.transaction.findMany({
     where: {
       user_id: userId,
+      date: { gte: from, lte: to },
       ...(categoryIds.length > 0 ? { category_id: { in: categoryIds } } : {}),
       ...(bankIds.length > 0 ? { bank_id: { in: bankIds } } : {}),
       ...(types.length > 0 ? { type: { in: types } } : {}),

@@ -93,12 +93,16 @@ async function getTransactions(
     const categoryIds = req.query.categoryIds;
     const bankIds = req.query.bankIds;
     const types = req.query.types;
+    const from = req.query.from;
+    const to = req.query.to;
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const transactions = await transactionRepository.findAll(
       userId,
       page,
       limit,
+      from,
+      to,
       categoryIds,
       bankIds,
       types,
