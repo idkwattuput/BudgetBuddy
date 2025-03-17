@@ -5,7 +5,7 @@ import TransactionTable from "./_components/transaction-table";
 export default function Transaction() {
   return (
     <div>
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col items-start md:flex-row md:justify-between md:items-center">
         <h1 className="text-3xl font-bold">Transaction</h1>
         <div className="flex items-center gap-4">
           <AddTransactionDialog type="INCOME">

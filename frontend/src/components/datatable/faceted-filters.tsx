@@ -21,6 +21,8 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { useEffect, useState } from "react"
 import useAxiosPrivate from "@/hooks/use-axios-private"
+import { Category } from "@/app/(protected)/category/page"
+import { Bank } from "@/app/(protected)/bank/page"
 
 interface DataTableFacetedFilterProps {
   title?: string
@@ -35,6 +37,8 @@ interface Options {
   type: string
   icon?: React.ComponentType<{ className?: string }>
 }
+
+type CategoryOrBank = Category & Bank;
 
 export function DataTableFacetedFilter({
   title,
@@ -52,7 +56,7 @@ export function DataTableFacetedFilter({
         const api = type === "category" ? "category" : "banks"
         const response = await axiosPrivate.get(`/api/v1/${api}`)
         const optionsMap = new Map()
-        response.data.data.forEach((o) => {
+        response.data.data.forEach((o: CategoryOrBank) => {
           optionsMap.set(o.name, {
             id: o.id,
             value: type === "category" ? o.name : o.bank_name,

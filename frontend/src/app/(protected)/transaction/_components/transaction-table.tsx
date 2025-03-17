@@ -96,7 +96,7 @@ export default function TransactionTable() {
 
   return (
     <div className="mt-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex flex-col items-start gap-2 md:flex-row md:justify-between md:items-center ">
         <div className="flex items-center gap-4">
           <DataTableFacetedFilter title="Category" type={"category"} onChange={handleFilterChange} />
           <DataTableFacetedFilter title="Bank" type={"bank"} onChange={handleFilterChange} />
