@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
 import { setAccessToken } from "@/lib/cookies";
+import { CircleDollarSign } from "lucide-react";
 
 const FormSchema = z.object({
   email: z.string().min(3).email(),
@@ -74,7 +75,8 @@ export default function Login() {
   return (
     <div className="h-screen flex flex-col justify-center items-center">
       <div className="mb-4 flex items-center gap-2">
-        <h1 className="font-poppins text-3xl font-bold font-header italic">Budget Buddy</h1>
+        <CircleDollarSign className="size-8" />
+        <h1 className="font-bold text-3xl">Budget Buddy</h1>
       </div>
       <Card className="mx-auto max-w-sm">
         <CardHeader>
@@ -117,7 +119,7 @@ export default function Login() {
           </Form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline">
+            <Link href="/register" className="underline underline-offset-2">
               Sign up
             </Link>
           </div>
