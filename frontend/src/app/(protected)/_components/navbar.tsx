@@ -4,6 +4,7 @@ import { ModeToggle } from "@/components/theme-toggle-button";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import axios from "@/lib/axios";
+import { removeAccessToken } from "@/lib/cookies";
 import {
   CircleDollarSign,
   Menu,
@@ -29,7 +30,8 @@ export default function Navbar() {
       await axios.get("/api/v1/auth/logout", {
         withCredentials: true,
       })
-      router.push("/login")
+      await removeAccessToken()
+      router.push("/")
     } catch (error) {
       console.error((error))
     }

@@ -53,7 +53,6 @@ export default function AddTransactionDialog({ children, type }: Props) {
 
   const handleCategoryChange = useCallback((categoryId: string) => {
     form.setValue("categoryId", categoryId)
-    console.log("From handleCategoryChange", categoryId)
   }, [form])
 
   const handleBankChange = useCallback((bankId: string) => {

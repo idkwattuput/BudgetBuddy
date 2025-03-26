@@ -14,13 +14,21 @@ export async function getAccessToken() {
   return cookieStore.get("ATBB")?.value;
 }
 
+export async function removeAccessToken() {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("ATBB")?.value;
+  if (accessToken) {
+    cookieStore.delete("ATBB");
+  }
+}
+
 export async function setAccessToken(accessToken: string) {
   const cookieStore = await cookies();
   cookieStore.set("ATBB", accessToken, {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 50,
+    maxAge: 20,
   });
 }
 

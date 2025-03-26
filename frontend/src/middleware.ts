@@ -17,14 +17,14 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     } catch (error) {
       console.error(error);
-      if (pathname === "/login" || pathname === "/register") {
+      if (pathname === "/" || pathname === "/register") {
         return NextResponse.next();
       }
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
-  if (pathname === "/login" || pathname === "/register") {
+  if (pathname === "/" || pathname === "/register") {
     const previousPage = request.headers.get("referer") || "/dashboard";
     return NextResponse.redirect(new URL(previousPage, request.url));
   }
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
 // Config to match paths
 export const config = {
   matcher: [
-    "/login",
+    "/",
     "/register",
     "/dashboard",
     "/transaction",

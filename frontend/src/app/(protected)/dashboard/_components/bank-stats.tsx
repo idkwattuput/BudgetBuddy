@@ -32,7 +32,7 @@ interface ChartConfig {
   };
 }
 
-export default function BankStats() {
+export default function BankStats({ currentMonth }: { currentMonth: string }) {
   const axiosPrivate = useAxiosPrivate();
   const [bankStats, setBankStats] = useState<BankStats[]>([]);
   const [chartConfig, setChartConfig] = useState<ChartConfig>({});
@@ -92,6 +92,9 @@ export default function BankStats() {
 
   return (
     <Card className="flex flex-col">
+      <CardHeader>
+        <CardTitle>{currentMonth} Bank Expenses</CardTitle>
+      </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}

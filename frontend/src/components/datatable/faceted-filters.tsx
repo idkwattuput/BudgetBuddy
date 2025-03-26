@@ -52,20 +52,19 @@ export function DataTableFacetedFilter({
   useEffect(() => {
     async function getData() {
       try {
-        console.log("getData")
         const api = type === "category" ? "category" : "banks"
         const response = await axiosPrivate.get(`/api/v1/${api}`)
         const optionsMap = new Map()
         response.data.data.forEach((o: CategoryOrBank) => {
-          optionsMap.set(o.name, {
+          const key = type === "category" ? o.name : o.bank_name
+          optionsMap.set(key, {
             id: o.id,
             value: type === "category" ? o.name : o.bank_name,
             label: type === "category" ? `${o.icon} ${o.name}` : o.bank_name,
             type: type
           })
         })
-        const uniqueCategories = new Set(optionsMap.values())
-        setOptions(Array.from(uniqueCategories))
+        setOptions(Array.from(optionsMap.values()))
       } catch (error) {
         console.log(error)
       }
